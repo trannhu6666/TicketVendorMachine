@@ -12,9 +12,9 @@ namespace TicketVendorMachine.Models
         public int DestinationStationID { get; set; }
         public DateTime IssueDate { get; set; }
         public decimal Price { get; set; }
-        public string TicketCode { get; set; }
+        public string TicketCode { get; set; } = null!;
 
         [ForeignKey("DestinationStationID")]
-        public virtual Station DestinationStation { get; set; }
+        public virtual Station DestinationStation { get; set; } = null!;
     }
 }
