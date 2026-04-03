@@ -1,0 +1,26 @@
+﻿@model TicketVendorMachine.Models.Ticket
+@{
+    ViewData["Title"] = "In Vé Thành Công";
+}
+
+<div class="container mt-5 text-center">
+    <div class="card shadow-lg p-5 mx-auto border-success" style="max-width: 500px;">
+        <div class="text-success mb-4">
+            <h1 style="font-size: 80px;">✅</h1>
+            <h2 class="fw-bold">GIAO DỊCH THÀNH CÔNG</h2>
+        </div>
+        
+        <hr class="mb-4" />
+        
+        <div class="ticket-info text-start p-4 bg-light border border-2 border-dashed border-secondary mb-4">
+            <h4 class="text-center text-primary border-bottom pb-3 mb-3">🎫 VÉ TÀU METRO</h4>
+            <p class="fs-5"><strong>Mã vé:</strong> <span class="text-danger fw-bold">@Model.TicketCode</span></p>
+            <p class="fs-5"><strong>Thời gian:</strong> @Model.IssueDate.ToString("dd/MM/yyyy HH:mm")</p>
+            <p class="fs-5"><strong>Giá tiền:</strong> <span class="text-success fw-bold">@Model.Price.ToString("N0") VNĐ</span></p>
+        </div>
+
+        <p class="fs-5 text-muted mb-4">Vui lòng nhận vé giấy ở khe bên dưới.</p>
+        
+        <a href="/Ticket/Index" class="btn btn-primary btn-lg px-5 py-3">Quay lại Trang chủ</a>
+    </div>
+</div>
