@@ -6,63 +6,79 @@
     <div class="row justify-content-center">
         <div class="col-md-6">
             
-            <div id="startScreen" class="card shadow-lg border-0 rounded-lg text-center" style="min-height: 450px;">
-                <div class="card-body d-flex flex-column justify-content-center align-items-center p-5">
-                    <h2 class="mb-3 text-primary fw-bold">CHÀO MỪNG ĐẾN VỚI BẾN THÀNH METRO</h2>
-                    <p class="fs-5 text-muted mb-5">Vui lòng chạm vào màn hình để bắt đầu giao dịch</p>
-                    
-                    <button type="button" id="btnStart" class="btn btn-primary btn-lg py-4 px-5 fw-bold fs-3 rounded-pill shadow-sm">
-                        👆 BẮT ĐẦU / START
-                    </button>
-                </div>
-            </div>
-
-            <div id="ticketFormScreen" class="card shadow-lg border-0 rounded-lg" style="display: none;">
-                <div class="card-header bg-primary text-white text-center py-4 d-flex justify-content-between align-items-center">
-                    <button type="button" id="btnBack" class="btn btn-outline-light btn-sm">&larr; Hủy</button>
-                    <h3 class="mb-0 mx-auto">🚇 MÁY BÁN VÉ METRO</h3>
-                    <div style="width: 45px;"></div>
-                </div>
-                <div class="card-body p-5">
-                    <form asp-controller="Ticket" asp-action="BuyTicket" method="post">
+            <form id="ticketingForm" asp-controller="Ticket" asp-action="BuyTicket" method="post">
+                
+                <div id="stepStart" class="card shadow-lg border-0 rounded-lg text-center" style="min-height: 450px;">
+                    <div class="card-body d-flex flex-column justify-content-center align-items-center p-5">
+                        <h2 class="mb-3 text-primary fw-bold">BẾN THÀNH METRO</h2>
+                        <p class="fs-5 text-muted mb-5">Vui lòng chạm vào màn hình để bắt đầu</p>
                         
-                        <div class="form-group mb-4">
-                            <label class="fw-bold fs-5 mb-2">1. Chọn ga đến (Destination):</label>
-                            <select name="stationId" class="form-select form-select-lg" required>
-                                <option value="">-- Vui lòng chạm để chọn ga --</option>
+                        <button type="button" id="btnStart" class="btn btn-primary btn-lg py-4 px-5 fw-bold fs-3 rounded-pill shadow-sm">
+                            👆 BẮT ĐẦU / START
+                        </button>
+                    </div>
+                </div>
+
+                <div id="stepDestination" class="card shadow-lg border-0 rounded-lg" style="display: none; min-height: 450px;">
+                    <div class="card-header bg-primary text-white text-center py-4 d-flex justify-content-between align-items-center">
+                        <button type="button" class="btn btn-outline-light btn-sm btnCancel">&larr; Hủy giao dịch</button>
+                        <h3 class="mb-0 mx-auto">1. CHỌN ĐIỂM ĐẾN</h3>
+                        <div style="width: 100px;"></div>
+                    </div>
+                    <div class="card-body p-5 d-flex flex-column">
+                        
+                        <div class="form-group mb-auto">
+                            <label class="fw-bold fs-5 mb-3 text-center w-100">Vui lòng chọn ga bạn muốn đến:</label>
+                            <select id="stationSelect" name="stationId" class="form-select form-select-lg" required>
+                                <option value="">-- Chạm để chọn ga --</option>
                                 @foreach (var item in ViewBag.Stations)
                                 {
                                     <option value="@item.StationID">Ga @item.StationName - @item.BaseFare.ToString("N0") VNĐ</option>
                                 }
                             </select>
+                            <div id="stationError" class="text-danger mt-2" style="display:none;">Vui lòng chọn một ga trước khi tiếp tục!</div>
                         </div>
 
-                        <div class="form-group mb-5">
-                            <label class="fw-bold fs-5 mb-2">2. Chọn phương thức thanh toán:</label>
-                            <div class="d-flex justify-content-between">
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="paymentMethod" id="momo" value="Momo" required>
-                                    <label class="form-check-label fs-5" for="momo">Ví Momo</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="paymentMethod" id="vnpay" value="VNPay">
-                                    <label class="form-check-label fs-5" for="vnpay">VNPay</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="paymentMethod" id="credit" value="CreditCard">
-                                    <label class="form-check-label fs-5" for="credit">Thẻ tín dụng</label>
-                                </div>
+                        <div class="d-grid mt-5">
+                            <button type="button" id="btnNext" class="btn btn-info btn-lg py-3 fw-bold fs-4 text-white">
+                                TIẾP TỤC (NEXT) &rarr;
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="stepPayment" class="card shadow-lg border-0 rounded-lg" style="display: none; min-height: 450px;">
+                    <div class="card-header bg-success text-white text-center py-4 d-flex justify-content-between align-items-center">
+                        <button type="button" id="btnBackToDest" class="btn btn-outline-light btn-sm">&larr; Quay lại</button>
+                        <h3 class="mb-0 mx-auto">2. THANH TOÁN</h3>
+                        <button type="button" class="btn btn-outline-light btn-sm btnCancel">Hủy</button>
+                    </div>
+                    <div class="card-body p-5 d-flex flex-column">
+                        
+                        <div class="form-group mb-auto">
+                            <label class="fw-bold fs-5 mb-4 text-center w-100">Chọn phương thức thanh toán:</label>
+                            
+                            <div class="d-grid gap-3">
+                                <input type="radio" class="btn-check" name="paymentMethod" id="momo" value="Momo" required>
+                                <label class="btn btn-outline-primary btn-lg text-start py-3 fs-5" for="momo">📱 Ví điện tử Momo</label>
+
+                                <input type="radio" class="btn-check" name="paymentMethod" id="vnpay" value="VNPay">
+                                <label class="btn btn-outline-primary btn-lg text-start py-3 fs-5" for="vnpay">💳 VNPay</label>
+
+                                <input type="radio" class="btn-check" name="paymentMethod" id="credit" value="CreditCard">
+                                <label class="btn btn-outline-primary btn-lg text-start py-3 fs-5" for="credit">🏧 Thẻ tín dụng / Ghi nợ</label>
                             </div>
                         </div>
 
-                        <div class="d-grid">
+                        <div class="d-grid mt-4">
                             <button type="submit" class="btn btn-success btn-lg py-3 fw-bold fs-4">
                                 BẤM ĐỂ THANH TOÁN
                             </button>
                         </div>
-                    </form>
+                    </div>
                 </div>
-            </div>
+
+            </form>
 
         </div>
     </div>
@@ -70,20 +86,50 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        var startScreen = document.getElementById("startScreen");
-        var formScreen = document.getElementById("ticketFormScreen");
-        var btnStart = document.getElementById("btnStart");
-        var btnBack = document.getElementById("btnBack");
+        const stepStart = document.getElementById("stepStart");
+        const stepDestination = document.getElementById("stepDestination");
+        const stepPayment = document.getElementById("stepPayment");
+        
+        const btnStart = document.getElementById("btnStart");
+        const btnNext = document.getElementById("btnNext");
+        const btnBackToDest = document.getElementById("btnBackToDest");
+        const btnsCancel = document.querySelectorAll(".btnCancel");
+        const stationSelect = document.getElementById("stationSelect");
+        const stationError = document.getElementById("stationError");
+        const form = document.getElementById("ticketingForm");
 
         btnStart.addEventListener("click", function () {
-            startScreen.style.display = "none";
-            formScreen.style.display = "block";
+            stepStart.style.display = "none";
+            stepDestination.style.display = "block";
         });
 
-        btnBack.addEventListener("click", function () {
-            formScreen.style.display = "none";
-            startScreen.style.display = "block";
-            document.querySelector("form").reset();
+        btnNext.addEventListener("click", function () {
+            if (stationSelect.value === "") {
+                stationError.style.display = "block";
+            } else {
+                stationError.style.display = "none";
+                stepDestination.style.display = "none";
+                stepPayment.style.display = "block";
+            }
+        });
+
+        stationSelect.addEventListener("change", function() {
+            if (this.value !== "") stationError.style.display = "none";
+        });
+
+        btnBackToDest.addEventListener("click", function () {
+            stepPayment.style.display = "none";
+            stepDestination.style.display = "block";
+        });
+
+        btnsCancel.forEach(btn => {
+            btn.addEventListener("click", function () {
+                form.reset();
+                stationError.style.display = "none";
+                stepDestination.style.display = "none";
+                stepPayment.style.display = "none";
+                stepStart.style.display = "block";
+            });
         });
     });
 </script>
