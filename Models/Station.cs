@@ -8,7 +8,7 @@ namespace TicketVendorMachine.Models
     {
         [Key]
         public int StationID { get; set; }
-        public string StationName { get; set; }
+        public string StationName { get; set; } = string.Empty;
         public decimal BaseFare { get; set; }
     }
 }
